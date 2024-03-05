@@ -110,10 +110,22 @@ def bootstrap_ci(sample, func, ci_range=15.9, n_bs=10000, parallel=False,
         fig, ax = plt.subplots()
         ax.bar(
             hist.axes[0].centers, hist.values(), width=hist.axes[0].widths,
-            color='steelblue'
+            color='steelblue',
+            label='Function: ' + func.__name__
             )
-        for limit in ci:
-            ax.axvline(ci[limit], color='indianred', linestyle='--')
+        for limit, r in zip(ci, [ci_range, 100 - ci_range]):
+            ax.axvline(
+                ci[limit],
+                color='indianred',
+                linestyle='--',
+                label=str(r) + '%: ' + str(np.round(ci[limit], 1))
+                )
+        ax.axvline(
+            func(sample),
+            color='k',
+            label='Value: ' + str(np.round(func(sample), 1))
+            )
+        ax.legend()
         plt.show()
     
 
@@ -124,11 +136,7 @@ def bootstrap_ci(sample, func, ci_range=15.9, n_bs=10000, parallel=False,
 
 if __name__ == '__main__':
     
-    # from mcpmeas.helper_functions import one_d_gaussian
-    mu, sigma = 1, 1 # mean and standard deviation
-
-    # def func(x):
-        # return one_d_gaussian(x, 1, mu, 0, sigma)
+    mu, sigma = 1, 100 # mean and standard deviation
     s = np.random.normal(mu, sigma, 10000)
-    ci = bootstrap_ci(s, np.mean, plot_bs_distr=True)
+    ci = bootstrap_ci(s, np.median, plot_bs_distr=True)
 
