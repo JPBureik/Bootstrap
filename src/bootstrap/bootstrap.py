@@ -138,5 +138,5 @@ if __name__ == '__main__':
     
     mu, sigma = 1, 100 # mean and standard deviation
     s = np.random.normal(mu, sigma, 10000)
-    ci = bootstrap_ci(s, np.median, plot_bs_distr=True)
+    ci = bootstrap_ci(s, np.var, parallel=True, plot_bs_distr=True)
 
